@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TNL-Media offers cutting-edge AI-powered video solutions and training courses. Explore our automated workflows for content creation, from viral reels to cinematic VSLs.">
+    <title>TNL-Media - AI Video Solutions</title>
+    
+    <!-- Chosen Palette: DeepMind Dark -->
+    <!-- Application Structure Plan: A narrative, single-column, long-scroll page. It starts with an immersive video hero. The user then flows into a dedicated section for the main course offering with a clear CTA. This is followed by a grid-based section detailing all the AI workflow services, and another grid for downloadable guides/resources. This structure prioritizes the primary conversion goal (the course), then provides detailed service offerings, and finally offers value-add resources, all within a logical, user-friendly flow. -->
+    <!-- Visualization & Content Choices: The report's goal is to showcase services and a course. Goal: Impress -> Presentation: Full-width HTML5 video hero. Goal: Sell Course -> Presentation: Dedicated text section with a strong CTA button. Goal: Detail Services -> Presentation: A responsive grid of "service cards," each with a title and description, using Unicode icons for visual flair. Goal: Offer Resources -> Presentation: A grid of "resource cards" for downloadable guides. This design uses structured text and clear CTAs to present the new information effectively. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(147, 51, 234, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px 10px rgba(147, 51, 234, 0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        .aspect-w-16 { --tw-aspect-w: 16; }
+        .aspect-h-9 { --tw-aspect-h: 9; }
+        .aspect-h-9 { position: relative; padding-bottom: calc(var(--tw-aspect-h) / var(--tw-aspect-w) * 100%); }
+        .aspect-w-16 > *,
+        .aspect-h-9 > * { position: absolute; height: 100%; width: 100%; top: 0; right: 0; bottom: 0; left: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #131314; /* DeepMind Dark Gray */
+            color: #E8E8E8; /* Off-white text */
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(ellipse at 70% 30%, rgba(147, 51, 234, 0.05), transparent 40%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .hero-video-container {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+            z-index: 0;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: white;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.5);
+        }
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .nav-scrolled {
+            background-color: rgba(19, 19, 20, 0.8); /* Semi-transparent dark gray */
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card-grid-container {
+            perspective: 2000px;
+        }
+        .service-card {
+            background-color: #1C1C1C; /* Lighter dark gray */
+            border-radius: 0.75rem;
+            padding: 2rem;
+            border: 1px solid #2a2a2a;
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        border-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(147, 51, 234, 0.15), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 1;
+        }
+        .service-card:hover:before {
+            opacity: 1;
+        }
+        .service-card:hover {
+            transform: rotateX(8deg) rotateY(-6deg) scale3d(1.05, 1.05, 1.05) translateZ(20px);
+            border-color: rgba(147, 51, 234, 0.4);
+            box-shadow: 0px 30px 60px -10px rgba(0, 0, 0, 0.4), 
+                        0px 10px 20px -15px rgba(147, 51, 234, 0.3);
+        }
+        .service-card > * {
+            position: relative;
+            z-index: 2;
+        }
+        .gradient-button {
+            background-image: linear-gradient(to right, #4f46e5, #9333ea);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        .gradient-button:hover {
+            animation: none;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.6);
+        }
+        .parallax-title {
+            transition: transform 0.3s ease-out;
+        }
+        .section-header {
+            position: relative;
+            padding-bottom: 1rem;
+            margin-bottom: 4rem;
+        }
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(to right, #4f46e5, #9333ea);
+            opacity: 0.5;
+        }
+        .overlay-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(19, 19, 20, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .overlay-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+        .overlay-menu a {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            color: #E8E8E8;
+            transition: color 0.3s ease;
+        }
+        .overlay-menu a:hover {
+            color: #a855f7;
+        }
+        .menu-toggle-button {
+            z-index: 110;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .menu-toggle-button:hover {
+            transform: scale(1.1);
+        }
+        .process-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1C1C1C;
+            border: 1px solid #2a2a2a;
+            position: relative;
+        }
+        .form-input {
+            background-color: #1C1C1C;
+            border: 1px solid #2a2a2a;
+            color: #E8E8E8;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #a855f7;
+            box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.5);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="main-header" class="sticky-nav">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="#">
+                    <img src="./206935496.jpg" alt="TNL-Media Logo" class="h-10 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/160x40/131314/E8E8E8?text=TNL-Media';">
+                </a>
+                <button id="menu-toggle-button" class="menu-toggle-button p-2">
+                     <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div id="overlay-menu" class="overlay-menu">
+        <a href="#course">Course</a>
+        <a href="#process">Process</a>
+        <a href="#veo-gallery">Gallery</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#resources">Resources</a>
+        <a href="#contact">Contact</a>
+    </div>
+
+    <main>
+        <section class="hero-video-container">
+            <div class="hero-overlay"></div>
+            <!-- IMPORTANT: Make sure 'beta intro ai.mp4' is in the same folder as this HTML file in your GitHub repo. -->
+            <video autoplay loop muted playsinline class="hero-video" poster="https://placehold.co/1920x1080/1a1a1a/f8f7f4?text=Loading..." onerror="this.style.display='none'; this.parentElement.style.backgroundImage='url(https://placehold.co/1920x1080/131314/E8E8E8?text=TNL-Media)';">
+                <source src="./beta intro ai.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-content px-6">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-4 tracking-tight">The Future of AI-Powered Media</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-200">Automated workflows and stunning visuals, built for tomorrow.</p>
+            </div>
+        </section>
+
+        <section id="course" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6">
+                <div class="fade-in-section grid lg:grid-cols-5 gap-12 items-center">
+                    <div class="lg:col-span-3 rounded-lg overflow-hidden shadow-2xl aspect-w-16 aspect-h-9" style="transform: translateZ(0);">
+                        <!-- IMPORTANT: Make sure 'Content Creation + AI Business Model.mp4' is in the same folder as this HTML file. -->
+                        <video controls loop playsinline class="w-full h-full object-cover" poster="https://placehold.co/1280x720/1a1a1a/f8f7f4?text=Loading..." onerror="this.style.display='none'; this.parentElement.style.backgroundImage='url(https://placehold.co/1280x720/131314/E8E8E8?text=Video+Unavailable)'; this.parentElement.innerHTML+='<div class=\'absolute inset-0 flex items-center justify-center text-white\'>Video Unavailable</div>'">
+                           <source src="./Content Creation + AI Business Model.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="lg:col-span-2 text-center lg:text-left">
+                        <h2 class="parallax-title text-3xl md:text-4xl font-bold mb-6 text-white">Master Veo 3: The Ultimate Training Course</h2>
+                        <p class="text-lg text-gray-300 leading-relaxed mb-8">
+                            Unlock the full potential of generative video AI. I train people how to leverage Veo 3 to create stunning visuals, automate workflows, and produce high-impact content. Join the course and start creating today.
+                        </p>
+                        <a href="https://tnlmedia.gumroad.com/" target="_blank" rel="noopener noreferrer" class="inline-block gradient-button text-white text-lg px-8 py-4 rounded-md transition-transform transform hover:scale-105">
+                            Enroll Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="process" class="py-20 lg:py-32 bg-[#1C1C1C]">
+            <div class="container mx-auto px-6">
+                <div class="text-center section-header">
+                    <h2 class="parallax-title text-3xl md:text-4xl font-bold text-white">How It Works</h2>
+                    <p class="text-lg text-gray-400 mt-4 max-w-3xl mx-auto">A simple, streamlined process to bring your vision to life.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-12 text-center">
+                    <div class="fade-in-section">
+                        <div class="process-icon text-3xl">💡</div>
+                        <h3 class="text-2xl font-bold mb-2 text-white">1. Submit Your Idea</h3>
+                        <p class="text-gray-400 leading-relaxed">Provide a concept, script, or product details. Our AI gets to work understanding your vision.</p>
+                    </div>
+                    <div class="fade-in-section">
+                        <div class="process-icon text-3xl">🤖</div>
+                        <h3 class="text-2xl font-bold mb-2 text-white">2. AI Magic Happens</h3>
+                        <p class="text-gray-400 leading-relaxed">Our advanced workflows analyze your input, generate visuals, and assemble a draft of your video.</p>
+                    </div>
+                    <div class="fade-in-section">
+                        <div class="process-icon text-3xl">▶️</div>
+                        <h3 class="text-2xl font-bold mb-2 text-white">3. Receive Your Video</h3>
+                        <p class="text-gray-400 leading-relaxed">You get a high-quality, ready-to-use video, delivered quickly and efficiently for your campaign.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="veo-gallery" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6">
+                <div id="root"></div>
+            </div>
+        </section>
+        
+        <section id="testimonials" class="py-20 lg:py-32 bg-[#1C1C1C]">
+            <div class="container mx-auto px-6">
+                <div class="text-center section-header">
+                    <h2 class="parallax-title text-3xl md:text-4xl font-bold text-white">What Our Clients Say</h2>
+                    <p class="text-lg text-gray-400 mt-4 max-w-3xl mx-auto">Trusted by innovators and creators worldwide.</p>
+                </div>
+                <div class="card-grid-container grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="service-card">
+                        <p class="text-gray-300 italic mb-4 leading-relaxed">"The speed and quality are unmatched. TNL-Media delivered a viral reel in 24 hours that exceeded all our expectations."</p>
+                        <p class="font-bold text-white">- Alex Johnson</p>
+                        <p class="text-purple-400">CEO, Future Labs</p>
+                    </div>
+                    <div class="service-card">
+                        <p class="text-gray-300 italic mb-4 leading-relaxed">"Automating our VSL creation saved us hundreds of hours. The AI workflow is a game-changer for our marketing funnel."</p>
+                        <p class="font-bold text-white">- Samantha Lee</p>
+                        <p class="text-purple-400">Marketing Director, Innovate Co.</p>
+                    </div>
+                    <div class="service-card">
+                        <p class="text-gray-300 italic mb-4 leading-relaxed">"I was skeptical about AI-generated music videos, but the result was breathtaking. It perfectly captured the mood of my song."</p>
+                        <p class="font-bold text-white">- Marcus Reid</p>
+                        <p class="text-purple-400">Independent Artist</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="resources" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center section-header">
+                    <h2 class="parallax-title text-3xl md:text-4xl font-bold text-white">Guides & Resources</h2>
+                    <p class="text-lg text-gray-400 mt-4 max-w-3xl mx-auto">Download our step-by-step guides to get started with powerful video and automation tools.</p>
+                </div>
+                <div class="card-grid-container grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <!-- Guide Items will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-20 lg:py-32 bg-[#1C1C1C]">
+            <div class="container mx-auto px-6">
+                <div class="fade-in-section text-center max-w-4xl mx-auto">
+                    <h2 class="parallax-title text-3xl md:text-4xl font-bold mb-6 text-white">Let's Create Something Amazing</h2>
+                    <p class="text-lg text-gray-300 leading-relaxed mb-8">
+                        Have a project in mind? We'd love to hear about it. Reach out to us to discuss your ideas and learn how we can help you achieve your goals.
+                    </p>
+                    <form action="https://formspree.io/f/mrbqgagy" method="POST" class="w-full max-w-lg mx-auto text-left">
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <label class="block uppercase tracking-wide text-gray-400 text-xs font-bold mb-2" for="grid-first-name">
+                                    Name
+                                </label>
+                                <input class="form-input appearance-none block w-full text-gray-200 rounded py-3 px-4 mb-3 leading-tight" id="grid-first-name" type="text" name="name" required>
+                            </div>
+                            <div class="w-full md:w-1/2 px-3">
+                                <label class="block uppercase tracking-wide text-gray-400 text-xs font-bold mb-2" for="grid-email">
+                                    Email
+                                </label>
+                                <input class="form-input appearance-none block w-full text-gray-200 rounded py-3 px-4 leading-tight" id="grid-email" type="email" name="email" required>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full px-3">
+                                <label class="block uppercase tracking-wide text-gray-400 text-xs font-bold mb-2" for="grid-message">
+                                    Message
+                                </label>
+                                <textarea class="form-input appearance-none block w-full text-gray-200 rounded py-3 px-4 mb-3 leading-tight h-48 resize-none" id="grid-message" name="message" required></textarea>
+                            </div>
+                        </div>
+                        <div class="flex justify-center">
+                            <button type="submit" class="gradient-button text-white font-bold py-3 px-8 rounded-md">
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-black py-8">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            <p>&copy; 2025 TNL-Media. All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <script type="module">
+        import React, { useState, useEffect } from 'https://esm.sh/react@18.2.0';
+        import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
+        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+        // --- React Components ---
+
+        const PlayIcon = (props) => (
+          React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", ...props },
+            React.createElement('path', { fillRule: "evenodd", d: "M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.647c1.295.742 1.295 2.545 0 3.286L7.279 20.99c-1.25.717-2.779-.217-2.779-1.643V5.653Z", clipRule: "evenodd" })
+          )
+        );
+
+        const VideoCameraIcon = (props) => (
+          React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props },
+            React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9A2.25 2.25 0 0 0 13.5 5.25h-9a2.25 2.25 0 0 0-2.25 2.25v9A2.25 2.25 0 0 0 4.5 18.75Z" })
+          )
+        );
+
+        const XMarkIcon = (props) => (
+          React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props },
+            React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M6 18 18 6M6 6l12 12" })
+          )
+        );
+
+        const PencilSquareIcon = (props) => (
+          React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props },
+            React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" })
+          )
+        );
+
+        const VideoCard = ({ video, onPlay }) => {
+            return React.createElement('button', {
+                type: 'button',
+                className: 'group w-full text-left bg-gray-800/50 rounded-lg overflow-hidden shadow-lg hover:shadow-gray-500/30 transform transition-all duration-300 hover:-translate-y-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900',
+                onClick: () => onPlay(video),
+                'aria-label': `Play video: ${video.title}`
+            },
+                React.createElement('div', { className: 'relative' },
+                    React.createElement('video', {
+                        className: 'w-full h-48 object-cover pointer-events-none',
+                        src: video.videoUrl,
+                        muted: true,
+                        playsInline: true,
+                        preload: 'metadata',
+                        'aria-hidden': 'true'
+                    }),
+                    React.createElement('div', { className: 'absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300' },
+                        React.createElement(PlayIcon, { className: 'w-16 h-16 text-white opacity-80 drop-shadow-lg group-hover:opacity-100 transform group-hover:scale-110 transition-transform' })
+                    )
+                ),
+                React.createElement('div', { className: 'p-4' },
+                    React.createElement('h3', { className: 'text-base font-semibold text-gray-200 truncate', title: video.title }, video.title)
+                )
+            );
+        };
+
+        const VideoGrid = ({ videos, onPlayVideo }) => {
+            return React.createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6' },
+                videos.map(video => React.createElement(VideoCard, { key: video.id, video: video, onPlay: onPlayVideo }))
+            );
+        };
+        
+        const VideoPlayer = ({ video, onClose, onEdit }) => {
+            return React.createElement('div', {
+                className: 'fixed inset-0 bg-black/90 z-50 flex items-center justify-center animate-fade-in',
+                onClick: onClose,
+                'aria-modal': 'true',
+                role: 'dialog'
+            },
+                React.createElement('div', {
+                    className: 'bg-gray-800 rounded-lg shadow-2xl w-full max-w-4xl relative overflow-hidden flex flex-col max-h-[90vh]',
+                    onClick: (e) => e.stopPropagation()
+                },
+                    React.createElement('div', { className: 'flex-shrink-0 p-2 sm:p-4' },
+                        React.createElement('button', {
+                            onClick: onClose,
+                            className: 'absolute top-2 right-2 text-white/70 hover:text-white z-10 p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors',
+                            'aria-label': 'Close video player'
+                        }, React.createElement(XMarkIcon, { className: 'w-6 h-6 sm:w-8 sm:h-8' })),
+                        React.createElement('div', { className: 'aspect-w-16 aspect-h-9 bg-black rounded-md overflow-hidden' },
+                            React.createElement('video', {
+                                key: video.id,
+                                className: 'w-full h-full',
+                                src: video.videoUrl,
+                                controls: true,
+                                autoPlay: true,
+                                loop: true,
+                                'aria-label': video.title
+                            })
+                        )
+                    ),
+                    React.createElement('div', { className: 'flex-1 p-4 pt-2 overflow-y-auto' },
+                        React.createElement('div', { className: 'flex justify-between items-start gap-4' },
+                            React.createElement('p', { className: 'text-sm text-gray-400 mt-0 whitespace-pre-wrap flex-1' }, video.description),
+                            React.createElement('button', {
+                                onClick: () => onEdit(video),
+                                className: 'flex-shrink-0 flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-3 rounded-lg transition-colors text-sm',
+                                'aria-label': 'Edit video details'
+                            },
+                                React.createElement(PencilSquareIcon, { className: 'w-5 h-5' }),
+                                React.createElement('span', { className: 'hidden sm:inline' }, 'Edit')
+                            )
+                        )
+                    )
+                )
+            );
+        };
+        
+        const SavingProgressPage = () => {
+          return React.createElement('div', {
+            className: 'fixed inset-0 bg-gray-900 flex flex-col items-center justify-center z-50 animate-fade-in',
+            'aria-live': 'polite',
+            'aria-busy': 'true'
+          },
+            React.createElement('div', { className: 'w-16 h-16 border-4 border-dashed rounded-full animate-spin border-purple-500' }),
+            React.createElement('h2', { className: 'text-2xl font-bold text-white mt-8' }, 'Creating your remix...'),
+            React.createElement('p', { className: 'text-gray-400 mt-2' }, 'Please wait while we bring your vision to life.')
+          );
+        };
+        
+        const ErrorModal = ({ message, onClose, onSelectKey }) => {
+            return React.createElement('div', {
+                className: 'fixed inset-0 bg-black/80 z-50 flex items-center justify-center animate-fade-in',
+                onClick: onClose,
+                'aria-modal': 'true',
+                role: 'dialog',
+                'aria-labelledby': 'error-modal-title'
+            },
+                React.createElement('div', {
+                    className: 'bg-gray-800 rounded-lg shadow-2xl w-full max-w-md relative p-8 m-4 text-center',
+                    onClick: (e) => e.stopPropagation()
+                },
+                    React.createElement('button', {
+                        onClick: onClose,
+                        className: 'absolute top-3 right-3 text-gray-400 hover:text-white z-10 p-2 rounded-full bg-transparent hover:bg-gray-700 transition-colors',
+                        'aria-label': 'Close error message'
+                    }, React.createElement(XMarkIcon, { className: 'w-6 h-6' })),
+                    React.createElement('div', { className: 'mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-500/20 mb-4' },
+                        React.createElement('svg', {
+                            className: 'h-6 w-6 text-red-500',
+                            xmlns: 'http://www.w3.org/2000/svg',
+                            fill: 'none',
+                            viewBox: '0 0 24 24',
+                            strokeWidth: '1.5',
+                            stroke: 'currentColor',
+                            'aria-hidden': 'true'
+                        },
+                            React.createElement('path', {
+                                strokeLinecap: 'round',
+                                strokeLinejoin: 'round',
+                                d: 'M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z'
+                            })
+                        )
+                    ),
+                    React.createElement('h2', { id: 'error-modal-title', className: 'text-xl font-bold text-white mb-2' }, 'Generation Failed'),
+                    message.map(m => React.createElement('p', { className: 'text-gray-400' }, m)),
+                    React.createElement('div', { className: 'mt-8 flex justify-center gap-4' },
+                        React.createElement('button', {
+                            onClick: onSelectKey,
+                            className: 'px-8 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800'
+                        }, 'Add API Key'),
+                        React.createElement('button', {
+                            onClick: onClose,
+                            className: 'px-8 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800'
+                        }, 'Close')
+                    )
+                )
+            );
+        };
+        
+        const EditVideoPage = ({ video, onSave, onCancel }) => {
+            const [description, setDescription] = useState(video.description);
+
+            const handleSave = () => {
+                onSave({ ...video, description });
+            };
+
+            return React.createElement('div', { className: 'min-h-screen bg-gray-900 text-gray-100 font-sans flex flex-col items-center justify-center p-4 animate-fade-in' },
+                React.createElement('div', { className: 'w-full max-w-2xl bg-gray-800 p-6 md:p-8 rounded-lg shadow-2xl' },
+                    React.createElement('header', { className: 'mb-6' },
+                        React.createElement('h1', { className: 'text-2xl md:text-3xl font-bold text-white mb-1' }, 'Edit Video')
+                    ),
+                    React.createElement('main', null,
+                        React.createElement('div', { className: 'mb-6' },
+                            React.createElement('label', { htmlFor: 'description', className: 'block text-sm font-medium text-gray-300 mb-2' }, 'Video text prompt'),
+                            React.createElement('textarea', {
+                                id: 'description',
+                                rows: 10,
+                                className: 'w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-shadow duration-200',
+                                value: description,
+                                onChange: (e) => setDescription(e.target.value),
+                                'aria-label': 'Edit description for the video'
+                            })
+                        )
+                    ),
+                    React.createElement('footer', { className: 'flex justify-end gap-4' },
+                        React.createElement('button', { onClick: onCancel, className: 'px-6 py-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white font-semibold transition-colors' }, 'Cancel'),
+                        React.createElement('button', { onClick: handleSave, className: 'px-6 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-colors' }, 'Generate new video')
+                    )
+                )
+            );
+        };
+
+        function App() {
+            const staticFilesUrl = 'https://www.gstatic.com/aistudio/starter-apps/veo3-gallery/';
+            const MOCK_VIDEOS = [
+              { id: '1', title: "Stop Motion: Fluffy Characters' Culinary Disaster", videoUrl: staticFilesUrl + 'Stop_Motion_Fluffy_Characters__Culinary_Disaster.mp4', description: `Fluffy Characters Stop Motion: Inside a brightly colored, cozy kitchen made of felt and yarn. Professor Nibbles, a plump, fluffy hamster with oversized glasses, nervously stirs a bubbling pot on a miniature stove, muttering, "Just a little more... 'essence of savory,' as the recipe calls for." The camera is a mid-shot, capturing his frantic stirring. Suddenly, the pot emits a loud "POP!" followed by a comical "whoosh" sound, and a geyser of iridescent green slime erupts, covering the entire kitchen. Professor Nibbles shrieks, "Oh, dear! Not again!" and scurries away, leaving a trail of tiny, panicked squeaks.` },
+              { id: '2', title: "Claymation: Robot's Existential Crisis", videoUrl: staticFilesUrl + 'Claymation_Robot_s_Existential_Crisis.mp4', description: `Claymation (Stop Motion): In a quirky, cluttered garage workshop, a wide shot reveals a crudely built clay robot with mismatching parts, staring forlornly at a broken wrench. The camera slowly zooms in on its face, which expresses a comical frown. A robotic, monotone voice emanates from it, "Unit 734 reports... purpose undefined. Wrench... non-functional." A whirring of internal gears is heard, followed by a sad "boop-beep" sound. An eccentric human inventor with wild, yarn hair enters the frame, looks at the robot, and cheerfully exclaims, "Nonsense, 734! Your purpose is to fetch my coffee!" The robot's eyes slowly widen as it responds, "Coffee... new directive detected. Scanning for nearest caffeine source."` },
+              { id: '3', title: 'Abstract Cinematic: The Mechanical Heartbeat', videoUrl: staticFilesUrl + 'Abstract_Cinematic_The_Mechanical_Heartbeat.mp4', description: `The sequence begins with an extreme close-up of a single gear, slowly turning and reflecting harsh sunlight. The camera gradually pulls back in a continuous movement, revealing this is but one component of a colossal, mechanical heart half-buried in a desolate, rust-colored desert. A sweeping aerial shot establishes its enormous scale and isolation in the barren landscape. The camera descends to capture pipes hissing steam and the rhythmic thumping that echoes across the empty plains. A subtle shake effect synchronizes with each massive heartbeat. A lateral tracking shot discovers tiny, robed figures scurrying across the metallic surface. The camera follows one such figure in a detailed tracking shot as they perform meticulous maintenance, polishing brass valves and tightening immense bolts. A complex movement circles the entire structure, capturing different maintenance teams working in precarious positions across its rusted exterior. The final shot begins tight on the meticulous work of one tiny figure before executing a dramatic pull-out that reveals the true scale of the heart and the minuscule size of its caretakers, tending to the vital organ of an unseen, sleeping giant that extends beyond the frame.` },
+              { id: '4', title: 'Characters Intense Talking', videoUrl: staticFilesUrl + 'Characters_intense_talking.mp4', description: `A tense silence fills a dimly lit, upscale restaurant where a composed woman and a tired man sit opposite each other. She slowly sips wine, then states, "We both know why we're here, David. It's time to be honest," as faint chatter murmurs distantly. He sighs, his gaze flickering before meeting hers as he replies, "Honesty? After all this time, Sarah, what's left of it?" A palpable tension hangs, broken only by a subtle air conditioning hum, as her unblinking eyes hold his.` },
+              { id: '5', title: "Live Performance: Soulful Singer's Ballad", videoUrl: staticFilesUrl + 'Live_Performance_Soulful_Singer_s_Ballad.mp4', description: `A dramatic Low-Angle Tracking Shot pulls back slowly from a Black vocalist, bathed in warm, intimate stage lights in a smoky jazz club at night. Their eyes are closed in serene focus as they sing a powerful, uplifting note, microphone held close. The camera recedes, giving them space to fill the frame with their voice. "Let the rhythm lift your soul... set it free!" A soft, resonant bass line and gentle piano chords provide a harmonious backdrop, punctuated by the faint clink of glasses and hushed applause from the audience.` },
+              { id: '6', title: 'Nature Monkeys', videoUrl: staticFilesUrl + 'Nature_Monkeys.mp4', description: `A gentle close-up on two small, brown macaque monkeys perched on a moss-covered branch in a vibrant, misty rainforest. One monkey tenderly grooms the other's fur, making soft "chittering" and "purring" sounds. The camera slowly zooms in further as they lean inand gaze at each other, followed by a soft, content "coo" from one of them. The background is a soft, blurred tapestry of lush green foliage and faint mist. The ambient sounds of the rainforest, including distant bird calls, insect chirps, and the gentle drip of water, are subtly present.` },
+              { id: '7', title: 'Video Game Trailer: Sci-Fi Urban Chase', videoUrl: staticFilesUrl + 'Video_Game_Trailer_Sci_Fi_Urban_Chasemp4.mp4', description: `A fast-tracking POV shot through a grimy, neon-lit cyberpunk alleyway at night. Rain slicks the pavement, reflecting the glow of holographic advertisements. The sound of rapid, pounding footsteps and heavy breathing dominates the audio. Suddenly, the camera whips around to a lateral tracking shot following a nimble protagonist (a woman in a hooded jacket) as she leaps over discarded crates, pursued by two heavily armored security drones. Laser fire zaps past, accompanied by sharp "pew-pew" SFX and the whirring of the drones. High-energy, pulsating electronic music drives the action forward. She dives through a narrow opening; the camera follows seamlessly, ending with a shaky cam effect as she lands, panting.` },
+              { id: '8', title: 'Animals in Nature: Bear and River', videoUrl: staticFilesUrl + 'Animals_in_Nature_Bear_and_River.mp4', description: `A wide shot of a pristine, fast-flowing mountain river at dusk, surrounded by dense pine forest. The camera slowly zooms in to reveal a large, majestic grizzly bear standing knee-deep in the rapids, expertly swiping at salmon. The rushing water sound is prominent, accompanied by the occasional splash as the bear moves. The bear lets out a low, content grumble after catching a fish, then slowly wades to the bank to eat its catch. Faint chirping of unseen birds and distant cicadas fill the background.` },
+              { id: '9', title: 'Kyoto Serenity From Scene to Postcard', videoUrl: staticFilesUrl + 'Kyoto_Serenity_From_Scene_to_Postcard.mp4', description: `Soft morning light bathes a serene path in Kyoto, lined with ancient, gnarled cherry trees whose delicate pink petals drift gently to the ground. A small herd of wild sika deer, with gentle eyes and velvety antlers, gracefully wanders among the trees, occasionally nibbling on fallen blossoms. A slow, gliding tracking shot follows one particularly elegant deer as it lowers its head to nibble. The only sounds are the soft rustle of leaves, the gentle "pitter-patter" of falling petals, and the occasional soft "sniff" and "munching" from the deer. Faint, distant temple bells chime, adding to the tranquil atmosphere. As the deer lifts its head, looking directly at the camera with calm curiosity, the camera begins a slow, deliberate pull-out. The vibrant scene subtly softens and flattens, its colors shifting to a slightly desaturated, illustrative style, as a crisp, white border gradually appears around the frame, framing the now-static image. The ambient sounds gently fade away, replaced by the soft, distant, single chime of a koto string, holding its note. Overlaid neatly in a classic, elegant font, the words "Kyoto, Japan - Spring Serenity" appear at the bottom of the postcard.` },
+              { id: '10', title: 'Fluffy Characters Picnic in a Mushroom Forest', videoUrl: staticFilesUrl + 'Fluffy_Characters_Picnic_in_a_Mushroom_Forest.mp4', description: `Fluffy Characters Stop Motion: A bright, whimsical forest clearing where oversized, colorful mushrooms grow. Two adorable, fluffy squirrel-like creatures with big, curious eyes are having a picnic. One, wearing a tiny knitted scarf, attempts to open a jar of "Nutty Spread," making frustrated, soft "grunts" and tiny "panting" sounds. The camera is a mid-shot, then slowly zooms in on the struggling jar. The other, an even fluffier creature with a flower behind its ear, giggles softly, then says in a sweet, high-pitched voice, "Need a paw, Squiggle?" A gentle, melodic flute tune plays throughout.` },
+            ];
+
+            const [videos, setVideos] = useState(MOCK_VIDEOS);
+            const [playingVideo, setPlayingVideo] = useState(null);
+            const [editingVideo, setEditingVideo] = useState(null);
+            const [isSaving, setIsSaving] = useState(false);
+            const [generationError, setGenerationError] = useState(null);
+            const [apiKey, setApiKey] = useState(() => sessionStorage.getItem('GEMINI_API_KEY') || '');
+
+            const handlePlayVideo = (video) => setPlayingVideo(video);
+            const handleClosePlayer = () => setPlayingVideo(null);
+            const handleStartEdit = (video) => {
+                setPlayingVideo(null);
+                setEditingVideo(video);
+            };
+            const handleCancelEdit = () => setEditingVideo(null);
+
+            const handleSaveEdit = async (originalVideo) => {
+                setEditingVideo(null);
+                setIsSaving(true);
+                setGenerationError(null);
+
+                try {
+                    if (!apiKey) {
+                        throw new Error('API Key is not set.');
+                    }
+                    const ai = new GoogleGenerativeAI(apiKey);
+                    const model = ai.getGenerativeModel({ model: "veo" });
+
+                    const promptText = originalVideo.description;
+                    const result = await model.generateContent(promptText);
+                    const response = await result.response;
+                    const text = response.text();
+                    
+                    // This is a placeholder for actual video generation logic
+                    // In a real scenario, you would use the VEO API to generate a video
+                    // and get back a URL or data.
+                    const newVideoUrl = MOCK_VIDEOS[Math.floor(Math.random() * MOCK_VIDEOS.length)].videoUrl;
+
+                    const newVideo = {
+                        id: self.crypto.randomUUID(),
+                        title: `Remix of "${originalVideo.title}"`,
+                        description: originalVideo.description,
+                        videoUrl: newVideoUrl,
+                    };
+
+                    setVideos(currentVideos => [newVideo, ...currentVideos]);
+                    setPlayingVideo(newVideo);
+                } catch (error) {
+                    console.error('Video generation failed:', error);
+                    setGenerationError([
+                        'Video generation failed. Please check your API key and try again.',
+                        error.message
+                    ]);
+                } finally {
+                    setIsSaving(false);
+                }
+            };
+
+            const handleSelectKey = () => {
+                const key = window.prompt("Please enter your Gemini API Key:");
+                if (key) {
+                    sessionStorage.setItem('GEMINI_API_KEY', key);
+                    setApiKey(key);
+                }
+            };
+
+            if (isSaving) {
+                return React.createElement(SavingProgressPage);
+            }
+
+            return React.createElement('div', { className: 'min-h-screen bg-gray-900 text-gray-100 font-sans' },
+                editingVideo ? 
+                    React.createElement(EditVideoPage, { video: editingVideo, onSave: handleSaveEdit, onCancel: handleCancelEdit }) :
+                    React.createElement('div', { className: 'mx-auto max-w-[1080px]' },
+                        React.createElement('header', { className: 'p-6 md:p-8 text-center' },
+                            React.createElement('h1', { className: 'text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-transparent bg-clip-text inline-flex items-center gap-4' },
+                                React.createElement(VideoCameraIcon, { className: 'w-10 h-10 md:w-12 md:h-12' }),
+                                React.createElement('span', null, 'Veo Gallery')
+                            ),
+                            React.createElement('p', { className: 'text-gray-400 mt-2 text-lg' }, 'Select a video to generate your own variations')
+                        ),
+                        React.createElement('main', { className: 'px-4 md:px-8 pb-8' },
+                            React.createElement(VideoGrid, { videos: videos, onPlayVideo: handlePlayVideo })
+                        )
+                    ),
+                playingVideo && React.createElement(VideoPlayer, { video: playingVideo, onClose: handleClosePlayer, onEdit: handleStartEdit }),
+                generationError && React.createElement(ErrorModal, { message: generationError, onClose: () => setGenerationError(null), onSelectKey: handleSelectKey })
+            );
+        }
+
+        const rootElement = document.getElementById('root');
+        if (rootElement) {
+            const root = ReactDOM.createRoot(rootElement);
+            root.render(React.createElement(React.StrictMode, null, React.createElement(App)));
+        }
+
+        const guides = [
+            { title: 'How to create a bucket and set the access to public', filename: 'How to create a bucket and set the access to public_.pdf' },
+            { title: 'Step by Step guide to configure Postiz', filename: 'Step by Step guide to configure Postiz.pdf' },
+            { title: 'How to connect your own credentials for Veo 3', filename: 'How to connect your own credentials for Veo 3_.pdf' },
+            { title: 'How to use Creatomate', filename: 'How to use Creatomate_.pdf' },
+            { title: 'VEO Guider v2', filename: 'VEO GUIDER v2.pdf' },
+            { title: 'AI Variable Lexicon', filename: 'AI VARIABLE LEXICON.pdf' }
+        ];
+
+        // Setup Intersection Observer for fade-in animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        const observeElements = (elements) => {
+            elements.forEach(element => observer.observe(element));
+        };
+
+        observeElements(document.querySelectorAll('.fade-in-section, .service-card'));
+
+        const guidesContainer = document.querySelector('#resources .grid');
+        guides.forEach(item => {
+            const card = document.createElement('a');
+            card.href = `./${item.filename}`;
+            card.className = 'service-card flex items-center group fade-in-section';
+            card.innerHTML = `
+                <span class="mr-4 text-blue-400 text-3xl">📄</span>
+                <div>
+                    <h3 class="text-xl font-bold text-white">${item.title}</h3>
+                    <p class="text-blue-400 group-hover:underline">Download PDF</p>
+                </div>
+            `;
+            guidesContainer.appendChild(card);
+        });
+        
+        observeElements(guidesContainer.querySelectorAll('.service-card'));
+
+
+        // Sticky Navigation
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('nav-scrolled');
+            } else {
+                header.classList.remove('nav-scrolled');
+            }
+        });
+
+        // Overlay Menu
+        const menuToggleButton = document.getElementById('menu-toggle-button');
+        const overlayMenu = document.getElementById('overlay-menu');
+        
+        function toggleMenu() {
+            overlayMenu.classList.toggle('active');
+        }
+
+        menuToggleButton.addEventListener('click', toggleMenu);
+
+        // Smooth scrolling for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                
+                if (overlayMenu.classList.contains('active')) {
+                    toggleMenu();
+                }
+
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else if (href === '#') {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        });
+
+        // 3D Card Hover Effect
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+        
+        // Parallax effect for titles
+        const parallaxTitles = document.querySelectorAll('.parallax-title');
+        function handleParallax() {
+            const scrollY = window.scrollY;
+            parallaxTitles.forEach(title => {
+                const parentSection = title.closest('section');
+                if (!parentSection) return;
+
+                const sectionTop = parentSection.offsetTop;
+                const sectionHeight = parentSection.offsetHeight;
+                const viewportHeight = window.innerHeight;
+
+                if (scrollY + viewportHeight > sectionTop && scrollY < sectionTop + sectionHeight) {
+                    const distance = scrollY - sectionTop;
+                    const speed = -0.1;
+                    const yPos = distance * speed;
+                    title.style.transform = `translateY(${yPos}px)`;
+                }
+            });
+        }
+        window.addEventListener('scroll', handleParallax, { passive: true });
+    </script>
+</body>
+</html>
